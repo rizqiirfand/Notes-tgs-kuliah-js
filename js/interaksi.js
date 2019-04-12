@@ -69,5 +69,7 @@ function add_tgs(){
 
 function reset_notes() {
 	localStorage.clear()
+	arr = []
+	localStorage.setItem('notes', JSON.stringify(arr))
 	refresh_table(JSON.parse(localStorage.getItem('notes')));
 }
