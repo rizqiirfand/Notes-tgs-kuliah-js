@@ -1,0 +1,16 @@
+.sidenav {
+  width: 25%;
+  padding: 1rem;
+}
+.sidenav-brand {
+  font-size: 1.5rem;
+  font-weight: bold;
+}
+.sidenav-item {
+  font-weight: bold;
+  padding: 1rem 0.5rem;
+}
+.sidenav-item:hover {
+  cursor: pointer;
+  background-color: #dedede;
+}

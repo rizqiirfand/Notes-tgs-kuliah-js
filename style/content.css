@@ -1,0 +1,50 @@
+.content {
+  width: 75%;
+  padding: 0.5rem;
+  display: flex;
+  flex-direction: column;
+}
+
+/* header */
+.header-content {
+  flex: 1;
+}
+.item-header {
+  position: relative;
+  display: flex;
+  flex-wrap: none;
+  overflow-y: hidden;
+  -ms-overflow-style: none; /* scroll for Internet Explorer, Edge */
+  scrollbar-width: none; /* scroll for Firefox */
+}
+.item-header::-webkit-scrollbar {
+  display: none; /* scroll for Chrome, Safari, and Opera */
+}
+.btn-prev-item-header {
+  position: absolute;
+  left: 0;
+  display: flex;
+  height: 100%;
+  padding: 0rem 4rem 0rem 1rem;
+  background-image: linear-gradient(to right, #ffffff, 90%, #ffffff00);
+  align-items: center;
+}
+.btn-next-item-header {
+  position: absolute;
+  right: 0;
+  display: flex;
+  height: 100%;
+  padding: 0rem 1rem 0rem 4rem;
+  background-image: linear-gradient(to left, #ffffff, 90%, #ffffff00);
+  align-items: center;
+}
+.item-header > button {
+  margin: 0rem 0.1rem;
+}
+/* end */
+
+/* body */
+.body-content {
+  flex: 6;
+  padding: 0.5rem;
+}

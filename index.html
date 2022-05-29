@@ -1,154 +1,398 @@
 <!DOCTYPE html>
 <html>
-<head>
-	<meta name="viewport" content="width=device-width,initial-scale=1.0">
-	<title>Notes Tugas Kuliah</title>
-	<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
-	<script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
-	<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>
-	<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
-	<script type="text/javascript" src="js/interaksi.js"></script>
-	<script type="text/javascript">
-		$(document).ready(function (){
-			if (localStorage.getItem('notes') === null) {
-				arr = [];
-				localStorage.setItem('notes', JSON.stringify(arr));
-			} else {
-				var arr = JSON.parse(localStorage.getItem('notes'));
-				refresh_table(arr);
-			}
-		})
-	</script>
-</head>
-<body class="bg-secondary">
-	<div class="container shadow-sm bg-light">
-		<div class="jumbotron-fluid bg-primary text-light p-5">
-			<h1>Notes</h1>
-		</div>
-		<div class="jumbotron-fluid p-3 bg-light text-right">
-			<button type="button" id="triger_add" class="btn btn-info text-light" data-toggle="collapse" data-target="#create">+ Tambah</button>
-			<button type="button" id="triger_add" class="btn btn-danger text-light" onclick="reset_notes()">Hapus Semua</button>
-		</div>
-		<div class="">
-			<div class="collapse" id="create">
-				<form id="form_tambah_tgs" action="#" onsubmit="add_tgs()">
-					<table class="table table-borderless">
-						<tr>
-							<td>Judul Tugas</td>
-							<td>
-								<input id="judul_tgs" class="form-control" type="text" required=""></input>
-							</td>
-						</tr>
-						<tr> 
-							<td>Matakuliah</td>
-							<td>
-								<select id="matakuliah" class="form-control" required="">
-									<option value="MWC">MWC</option>
-									<option value="ADSI">ADSI</option>
-									<option value="TECHNO">TECHNO</option>
-									<option value="ML">ML</option>
-									<option value="METPEN">METPEN</option>
-									<option value="GAMEPROG">GAMEPROG</option>
-									<option value="IMK">IMK</option>
-									<option value="ANIMASI">ANIMASI</option>
-								</select>
-							</td>
-						</tr>
-						<tr>
-							<td>Deskripsi</td>
-							<td>
-								<textarea id="deskripsi" class="form-control" required=""></textarea>
-							</td>
-						</tr>
-						<tr>
-							<td>Deadline</td>
-							<td>
-								<input id="deadline" class="form-control" type="date" required=""></input>
-							</td>
-						</tr>
-						<tr>
-							<td></td>
-							<td>
-								<button class="btn btn-success" type="submit">tambahkan</button>
-							</td>
-						</tr>
-					</table>
-				</form>
-			</div>
-			<div id="read">
-				<div id="read_div" class="card-columns" >
-				</div>
-			</div>
-		</div>
-		<div class="modal fade" id="update">
-			<div class="modal-dialog">
-				<div class="modal-content">
-					<div class="modal-header bg-primary text-light"><h3>Edit</h3></div>
-					<form id="form_tambah_tgs" action="#" onsubmit="update_tgs()" >
-						<div class="modal-body">
-							<table class="table table-borderless">
-								<thead>
-									<tr>
-										<td>Judul Tugas</td>
-										<td>
-											<input id="up_id" type="hidden">
-											<input id="up_judul_tgs" class="form-control" type="text" required=""></input>
-										</td>
-									</tr>
-									<tr> 
-										<td>Matakuliah</td>
-										<td>
-											<select id="up_matakuliah" class="form-control" required="">
-												<option value="MWC">MWC</option>
-												<option value="ADSI">ADSI</option>
-												<option value="TECHNO">TECHNO</option>
-												<option value="ML">ML</option>
-												<option value="METPEN">METPEN</option>
-												<option value="GAMEPROG">GAMEPROG</option>
-												<option value="IMK">IMK</option>
-												<option value="ANIMASI">ANIMASI</option>
-											</select>
-										</td>
-									</tr>
-									<tr>
-										<td>Deskripsi</td>
-										<td>
-											<textarea id="up_deskripsi" class="form-control" required=""></textarea>
-										</td>
-									</tr>
-									<tr>
-										<td>Deadline</td>
-										<td>
-											<input id="up_deadline" type="date" class="form-control" required=""></input>
-										</td>
-									</tr>
-								</thead>
-							</table>
-						</div>
-						<div class="modal-footer">
-							<button id="btn_up" class="btn btn-success" type="submit" >Update</button>
-							<button id="btn_up_cls" class="btn btn-danger" data-dismiss="modal">Close</button>
-						</div>
-					</form>
-				</div>
-			</div>
-		</div>
-		<div class="modal fade" id="modal_delete">
-			<div class="modal-dialog">
-				<div class="modal-content text-center">
-					<div class="modal-header btn-danger text-light">
-						<h1>Apakah Anda Yakin Untuk Menghapus ?</h1>
-					</div>
-					<div class="modal-body">
-						<input id="id_del" type="hidden">
-						<button class="btn btn-success" onclick="del_tgs()">OK</button>
-						<button id="btn_del_cls" class="btn btn-danger" data-dismiss="modal">Batal</button>
-					</div>
-				</div>
-			</div>
-		</div>
-		<footer class="container-fluid bg-primary text-light text-center p-5">
-		</footer>
-	</div>
-</body>
+  <head>
+    <meta name="viewport" content="width=device-width,initial-scale=1.0" />
+    <title>Notes Tugas Kuliah</title>
+    <!-- import bootstrap -->
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0-beta1/dist/css/bootstrap.min.css"
+      rel="stylesheet"
+      integrity="sha384-0evHe/X+R7YkIZDRvuzKMRqM+OrBnVFBL6DOitfPri4tjfHxaWutUpFmBp4vmVor"
+      crossorigin="anonymous"
+    />
+    <script
+      src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.5/dist/umd/popper.min.js"
+      integrity="sha384-Xe+8cL9oJa6tN/veChSP7q+mnSPaj5Bcu9mPX5F5xIGE0DVittaqT5lorf0EI7Vk"
+      crossorigin="anonymous"
+    ></script>
+    <script
+      src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0-beta1/dist/js/bootstrap.min.js"
+      integrity="sha384-kjU+l4N0Yf4ZOJErLsIcvOU2qSb74wXpOhqTvwVx3OElZRweTnQ6d31fXEoRD1Jy"
+      crossorigin="anonymous"
+    ></script>
+    <!-- end -->
+
+    <!-- import css lokal -->
+    <link rel="stylesheet" href="style/all.css" />
+    <link rel="stylesheet" href="style/sidenav.css" />
+    <link rel="stylesheet" href="style/content.css" />
+    <!-- end -->
+
+    <!-- import font -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Poppins&display=swap"
+      rel="stylesheet"
+    />
+    <script
+      src="https://kit.fontawesome.com/e512f44ae1.js"
+      crossorigin="anonymous"
+    ></script>
+    <!-- end -->
+
+    <!-- import jquery -->
+    <script
+      src="https://code.jquery.com/jquery-3.6.0.slim.min.js"
+      integrity="sha256-u7e5khyithlIdTpu22PHhENmPcRdFiHRjhAuHcs05RI="
+      crossorigin="anonymous"
+    ></script>
+    <!-- end -->
+
+    <!-- import js -->
+    <script type="text/javascript" src="js/interaksi.js"></script>
+    <script type="text/javascript" src="js/loadPage.js"></script>
+    <!-- end -->
+    <style>
+      .empty-content {
+        height: 100%;
+        width: 100%;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        text-align: center;
+        display: none;
+      }
+      .group-content {
+        display: flex;
+        flex-wrap: wrap;
+      }
+      .card {
+        width: 20rem;
+        margin: 0.5rem;
+      }
+      .card-img-top {
+        height: 10rem;
+        object-fit: cover;
+      }
+    </style>
+  </head>
+
+  <body>
+    <div class="container-field">
+      <section class="sidenav">
+        <div class="sidenav-brand">
+          <i class="far fa-sticky-note"></i> NOTES
+        </div>
+        <hr />
+        <div class="sidenav-list">
+          <div class="sidenav-item">
+            <i class="fas fa-solid fa-house-user"></i> HOME
+          </div>
+          <div class="sidenav-item">
+            <i class="fas fa-plus-square"></i> CREATE
+          </div>
+        </div>
+      </section>
+
+      <section class="content">
+        <div class="header-content">
+          <div class="title-header">
+            <h4>Matakuliah</h4>
+          </div>
+          <div class="item-header">
+            <div class="btn-prev-item-header">
+              <i class="fas fa-angle-left"></i>
+            </div>
+            <div class="btn-next-item-header">
+              <i class="fas fa-angle-right"></i>
+            </div>
+            <button
+              class="btn btn-primary rounded-pill text-white matkul-badge"
+            >
+              MWC
+            </button>
+            <button
+              class="btn btn-primary rounded-pill text-white matkul-badge"
+            >
+              ADSI
+            </button>
+            <button
+              class="btn btn-primary rounded-pill text-white matkul-badge"
+            >
+              TECHNO
+            </button>
+            <button
+              class="btn btn-primary rounded-pill text-white matkul-badge"
+            >
+              ML
+            </button>
+            <button
+              class="btn btn-primary rounded-pill text-white matkul-badge"
+            >
+              METPEN
+            </button>
+            <button
+              class="btn btn-primary rounded-pill text-white matkul-badge"
+            >
+              GAMEPROG
+            </button>
+            <button
+              class="btn btn-primary rounded-pill text-white matkul-badge"
+            >
+              IMK
+            </button>
+            <button
+              class="btn btn-primary rounded-pill text-white matkul-badge"
+            >
+              ANIMASI
+            </button>
+          </div>
+        </div>
+        <div class="body-content">
+          <div class="empty-content">
+            <div class="fill-empty-content">
+              <h4 class="text-muted">Empty Notes</h4>
+              <button class="btn btn-primary">CREATE</button>
+            </div>
+          </div>
+          <div class="group-content">
+            <div class="card">
+              <div class="position-relative">
+                <div class="card-img-overlay text-end">
+                  <p class="badge rounded-pill bg-danger text-white">
+                    Deadline : 23/08/1998
+                  </p>
+                </div>
+                <div class="mask-img"></div>
+                <img
+                  class="card-img-top"
+                  src="assets/adsi.jpg"
+                  alt="Card image cap"
+                />
+              </div>
+              <div class="card-body">
+                <h5 class="card-title">Card title</h5>
+                <p class="card-text">
+                  This is a longer card with supporting text below as a natural
+                  lead-in to additional content. This content is a little bit
+                  longer.
+                </p>
+                <div class="d-grid gap-2">
+                  <button class="btn btn-warning" type="button">
+                    <i class="fas fa-edit"></i> Edit
+                  </button>
+                  <button class="btn btn-danger" type="button">
+                    <i class="fas fa-trash"></i> Delete
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="footer-content">
+          <div class="d-grid gap-2">
+            <button class="btn btn-danger">
+              <i class="fas fa-exclamation-triangle"></i> Reset Note
+            </button>
+          </div>
+        </div>
+      </section>
+    </div>
+
+    <!-- <div class="container shadow-sm bg-light">
+      <div class="jumbotron-fluid bg-primary text-light p-5">
+        <h1>Notes</h1>
+      </div>
+      <div class="jumbotron-fluid p-3 bg-light text-right">
+        <button
+          type="button"
+          id="triger_add"
+          class="btn btn-info text-light"
+          data-toggle="collapse"
+          data-target="#create"
+        >
+          + Tambah
+        </button>
+        <button
+          type="button"
+          id="triger_add"
+          class="btn btn-danger text-light"
+          onclick="reset_notes()"
+        >
+          Hapus Semua
+        </button>
+      </div>
+      <div class="">
+        <div class="" id="create">
+          <form id="form_tambah_tgs" action="#" onsubmit="add_tgs()">
+            <table class="table table-borderless">
+              <tr>
+                <td>Judul Tugas</td>
+                <td>
+                  <input
+                    id="judul_tgs"
+                    class="form-control"
+                    type="text"
+                    required=""
+                  />
+                </td>
+              </tr>
+              <tr>
+                <td>Matakuliah</td>
+                <td>
+                  <select id="matakuliah" class="form-control" required="">
+                    <option value="MWC">MWC</option>
+                    <option value="ADSI">ADSI</option>
+                    <option value="TECHNO">TECHNO</option>
+                    <option value="ML">ML</option>
+                    <option value="METPEN">METPEN</option>
+                    <option value="GAMEPROG">GAMEPROG</option>
+                    <option value="IMK">IMK</option>
+                    <option value="ANIMASI">ANIMASI</option>
+                  </select>
+                </td>
+              </tr>
+              <tr>
+                <td>Deskripsi</td>
+                <td>
+                  <textarea
+                    id="deskripsi"
+                    class="form-control"
+                    required=""
+                  ></textarea>
+                </td>
+              </tr>
+              <tr>
+                <td>Deadline</td>
+                <td>
+                  <input
+                    id="deadline"
+                    class="form-control"
+                    type="date"
+                    required=""
+                  />
+                </td>
+              </tr>
+              <tr>
+                <td></td>
+                <td>
+                  <button class="btn btn-success" type="submit">
+                    tambahkan
+                  </button>
+                </td>
+              </tr>
+            </table>
+          </form>
+        </div>
+        <div id="read">
+          <div id="read_div" class="card-columns"></div>
+        </div>
+      </div>
+      <div class="modal fade" id="update">
+        <div class="modal-dialog">
+          <div class="modal-content">
+            <div class="modal-header bg-primary text-light">
+              <h3>Edit</h3>
+            </div>
+            <form id="form_tambah_tgs" action="#" onsubmit="update_tgs()">
+              <div class="modal-body">
+                <table class="table table-borderless">
+                  <thead>
+                    <tr>
+                      <td>Judul Tugas</td>
+                      <td>
+                        <input id="up_id" type="hidden" />
+                        <input
+                          id="up_judul_tgs"
+                          class="form-control"
+                          type="text"
+                          required=""
+                        />
+                      </td>
+                    </tr>
+                    <tr>
+                      <td>Matakuliah</td>
+                      <td>
+                        <select
+                          id="up_matakuliah"
+                          class="form-control"
+                          required=""
+                        >
+                          <option value="MWC">MWC</option>
+                          <option value="ADSI">ADSI</option>
+                          <option value="TECHNO">TECHNO</option>
+                          <option value="ML">ML</option>
+                          <option value="METPEN">METPEN</option>
+                          <option value="GAMEPROG">GAMEPROG</option>
+                          <option value="IMK">IMK</option>
+                          <option value="ANIMASI">ANIMASI</option>
+                        </select>
+                      </td>
+                    </tr>
+                    <tr>
+                      <td>Deskripsi</td>
+                      <td>
+                        <textarea
+                          id="up_deskripsi"
+                          class="form-control"
+                          required=""
+                        ></textarea>
+                      </td>
+                    </tr>
+                    <tr>
+                      <td>Deadline</td>
+                      <td>
+                        <input
+                          id="up_deadline"
+                          type="date"
+                          class="form-control"
+                          required=""
+                        />
+                      </td>
+                    </tr>
+                  </thead>
+                </table>
+              </div>
+              <div class="modal-footer">
+                <button id="btn_up" class="btn btn-success" type="submit">
+                  Update
+                </button>
+                <button
+                  id="btn_up_cls"
+                  class="btn btn-danger"
+                  data-dismiss="modal"
+                >
+                  Close
+                </button>
+              </div>
+            </form>
+          </div>
+        </div>
+      </div>
+      <div class="modal fade" id="modal_delete">
+        <div class="modal-dialog">
+          <div class="modal-content text-center">
+            <div class="modal-header btn-danger text-light">
+              <h1>Apakah Anda Yakin Untuk Menghapus ?</h1>
+            </div>
+            <div class="modal-body">
+              <input id="id_del" type="hidden" />
+              <button class="btn btn-success" onclick="del_tgs()">OK</button>
+              <button
+                id="btn_del_cls"
+                class="btn btn-danger"
+                data-dismiss="modal"
+              >
+                Batal
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+      <footer
+        class="container-fluid bg-primary text-light text-center p-5"
+      ></footer>
+    </div> -->
+  </body>
 </html>
